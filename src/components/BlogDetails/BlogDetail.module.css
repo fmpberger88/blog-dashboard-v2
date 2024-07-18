@@ -1,0 +1,137 @@
+.blogContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin: 2rem auto;
+    width: 70%;
+}
+
+.blogTitle {
+    text-align: center;
+    color: #213547;
+}
+
+.author, .views {
+    font-weight: bold;
+}
+
+.published {
+    font-style: italic;
+}
+
+.blogImage {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.content {
+    line-height: 1.5rem;
+    font-size: 1.1rem;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.deleteButton {
+    background-color: darkred;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 120px;
+}
+
+.deleteButton:hover {
+    background-color: #721c24;
+}
+
+.editButton {
+    background-color: orange;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 120px;
+    text-align: center;
+}
+
+.editButton:hover {
+    background-color: darkorange;
+    color: white;
+    text-decoration: none;
+}
+
+.commentsTitle {
+    color: #213547;
+    border-top: 2px solid #213547;
+    width: 100%;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.commentsCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    border-bottom: 1px solid #213547;
+    padding: 1.5rem 0;
+}
+
+.commentsText {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+
+
+.backLink {
+    text-decoration: none;
+    color: #fff;
+    background-color: #213547;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+}
+
+
+.deleteCommentButton {
+    background-color: darkred;
+    color: white;
+    border: none;
+    padding: 0.25rem;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100px;
+    margin-top: 0.5rem;
+}
+
+.deleteCommentButton:hover {
+    background-color: #721c24;
+}
+
+
+
+@media screen and (max-width: 1000px) {
+    .blogContainer {
+        width: 90%;
+    }
+    .blogImage {
+        width: 100%;
+    }
+}

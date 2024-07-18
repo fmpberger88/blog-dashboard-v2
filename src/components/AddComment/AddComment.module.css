@@ -1,0 +1,40 @@
+/* src/components/AddComment/AddComment.module.css */
+
+.addCommentContainer {
+    padding: 10px;
+    width: 70%;
+}
+
+.addCommentForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 1.5rem;
+}
+
+.addCommentTextarea {
+    padding: 10px;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.addCommentButton {
+    padding: 10px 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    background-color: #213547;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 150px;
+}
+
+.addCommentButton:hover {
+    background-color: #475E72;
+}
