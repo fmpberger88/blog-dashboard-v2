@@ -47,10 +47,10 @@ const CreateBlog = () => {
         formData.append('title', title);
         formData.append('content', content);
         formData.append('categories', JSON.stringify(selectedCategories));
-        formData.append('tags', tags.split(',').map(tag => tag.trim()));
+        formData.append('tags', JSON.stringify(tags.split(',').map(tag => tag.trim())));
         formData.append('seoTitle', seoTitle);
         formData.append('seoDescription', seoDescription);
-        formData.append('seoKeywords', seoKeywords.split(',').map(keyword => keyword.trim()));
+        formData.append('seoKeywords', JSON.stringify(seoKeywords.split(',').map(keyword => keyword.trim())));
         if (image) {
             formData.append('image', image);
         }
@@ -136,8 +136,8 @@ const CreateBlog = () => {
                             <div key={category._id}>
                                 <input
                                     type="checkbox"
-                                    id={categories._id}
-                                    value={categories._id}
+                                    id={category._id}
+                                    value={category._id}
                                     onChange={handleCategoryChange}
                                 />
                                 <label htmlFor={category._id}>{category.name}</label>
