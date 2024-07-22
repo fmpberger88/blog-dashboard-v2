@@ -74,6 +74,15 @@ export const deleteBlog = async (id) => {
     }
 };
 
+export const fetchCategories = async() => {
+    try {
+        const response = await axiosInstance.get('/categories');
+        return response.data;
+    } catch (error) {
+        handleError(error);
+    }
+}
+
 export const fetchComments = async (blogId) => {
     try {
         const response = await axiosInstance.get(`/comments/${blogId}`);
