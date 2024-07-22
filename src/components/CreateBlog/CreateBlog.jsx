@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import { Editor } from '@tinymce/tinymce-react';
-import { createBlog } from '../../api.jsx';
+import { createBlog, fetchCategories } from '../../api.jsx';
 import { useNavigate } from 'react-router-dom';
 import styles from './CreateBlog.module.css';
 import {StyledEditor} from "../../styles.jsx";
@@ -10,9 +10,20 @@ import {StyledEditor} from "../../styles.jsx";
 const CreateBlog = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [tags, setTags] = useState('');
+    const [seoTitle, setSeoTitle] = useState('');
+    const [seoDescription, setSeoDescription] = useState('');
+    const [seoKeywords, setSeoKeywords] = useState('');
     const [image, setImage] = useState(null);
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+
+    // fetch categories
+    const { data: categories, error, isLoading: categoriesLoading } = useQuery({
+        queryKey: 'categories',
+        queryFn: fetchCategories
+    })
 
     const mutation = useMutation({
         mutationFn: createBlog,
@@ -35,11 +46,23 @@ const CreateBlog = () => {
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
+        formData.append('categories', selectedCategories);
+        formData.append('tags', tags.split(',').map(tag => tag.trim()));
+        formData.append('seoTitle', seoTitle);
+        formData.append('seoDescription', seoDescription);
+        formData.append('seoKeywords', seoKeywords.split(',').map(keyword => keyword.trim()));
         if (image) {
             formData.append('image', image);
         }
         mutation.mutate(formData);
     };
+
+    const handleCategoryChange = (e) => {
+        const { value, checked } = e.target;
+        selectedCategories(prev =>
+            checked ? [...prev, value] : prev.filter(category => category !== value)
+        );
+    }
 
     return (
         <div className={styles.createBlogContainer}>
@@ -72,6 +95,64 @@ const CreateBlog = () => {
                                 bullist numlist outdent indent | removeformat | help'
                         }}
                         onEditorChange={handleEditorChange}
+                    />
+                </div>
+                <p>Please add information about the blog for Search Engine Optimization (SEO)</p>
+                <div>
+                    <input
+                        type="text"
+                        id="seoTitle"
+                        value={seoTitle}
+                        onChange={(e) => setSeoTitle(e.target.value)}
+                        placeholder="Seo Title"
+                        required
+                    />
+                </div>
+                <div>
+                    <textarea
+                        id="seoDescription"
+                        value={seoDescription}
+                        onChange={(e) => setSeoDescription(e.target.value)}
+                        placeholder="SEO Description"
+                        required
+                    />
+                </div>
+                <div>
+                    <input
+                        type="text"
+                        id="seoKeywords"
+                        value={seoKeywords}
+                        onChange={(e) => setSeoKeywords(e.target.value)}
+                        placeholder="SEO Keywords (comma seperated"
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Categories:</label>
+                    {categoriesLoading ? (
+                        <p>Loading categories...</p>
+                    ) : (
+                        categories.map(category => (
+                            <div>
+                                <input
+                                    type="checkbox"
+                                    id={categories._id}
+                                    value={categories._id}
+                                    onChange={handleCategoryChange}
+                                />
+                                <label htmlFor={category._id}>{category.name}</label>
+                            </div>
+                        ))
+                    )}
+                </div>
+                <div>
+                    <input
+                        type="text"
+                        id="tags"
+                        value={tags}
+                        onChange={(e) => setTags(e.target.value)}
+                        placeholder="Tags (comma seperated)"
+                        required
                     />
                 </div>
                 <div>
