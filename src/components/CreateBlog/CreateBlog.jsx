@@ -46,7 +46,7 @@ const CreateBlog = () => {
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
-        formData.append('categories', selectedCategories);
+        formData.append('categories', JSON.stringify(selectedCategories));
         formData.append('tags', tags.split(',').map(tag => tag.trim()));
         formData.append('seoTitle', seoTitle);
         formData.append('seoDescription', seoDescription);
@@ -59,7 +59,7 @@ const CreateBlog = () => {
 
     const handleCategoryChange = (e) => {
         const { value, checked } = e.target;
-        selectedCategories(prev =>
+        setSelectedCategories(prev =>
             checked ? [...prev, value] : prev.filter(category => category !== value)
         );
     }
@@ -123,7 +123,7 @@ const CreateBlog = () => {
                         id="seoKeywords"
                         value={seoKeywords}
                         onChange={(e) => setSeoKeywords(e.target.value)}
-                        placeholder="SEO Keywords (comma seperated"
+                        placeholder="SEO Keywords (comma seperated)"
                         required
                     />
                 </div>
@@ -133,7 +133,7 @@ const CreateBlog = () => {
                         <p>Loading categories...</p>
                     ) : (
                         categories.map(category => (
-                            <div>
+                            <div key={category._id}>
                                 <input
                                     type="checkbox"
                                     id={categories._id}
