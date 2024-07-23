@@ -1,10 +1,10 @@
 # 📝 Blog Frontend 📝
 
-A React-based frontend for the Blog API, providing a user-friendly interface for creating, updating, and viewing blog posts and comments.
+A React-based frontend for the Blog API, providing a user-friendly interface for creating, updating, and viewing blog posts, categories and comments.
 
 ## 🌟 Features
 
-- ✏️ Users can create, update, and delete blog posts.
+- ✏️ Users can create, update, and delete blog posts and blog categories.
 - 💬 Users can comment on blog posts.
 - 📅 Blog posts and comments are displayed in a user-friendly manner.
 - 🔐 Authentication and authorization using JWT tokens stored in localStorage.
@@ -21,7 +21,7 @@ A React-based frontend for the Blog API, providing a user-friendly interface for
 
 1. 📥 Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/blog-frontend.git
+    git clone https://github.com/yourusername/blog-dashboard-v2.git
     cd blog-frontend
     ```
 
@@ -57,13 +57,21 @@ src/
 │   ├── AddComment/        # AddComment component
 │   ├── BlogDetail/        # BlogDetail component
 │   ├── Blogs/             # Blogs component
+│   ├── Categories/        # Categories component
 │   ├── CreateBlog/        # CreateBlog component
+│   ├── CreateCategories/  # CreateCategories component
 │   ├── EditBlog/          # EditBlog component
-│   ├── SuccessMessage/      # SuccessMessage component
+│   ├── EditCategories/    # EditCategories component
+│   ├── ErrorMessage/      # ErrorMessage component
+│   ├── Footer/            # Footer component
 │   ├── Header/            # Header component
 │   ├── Loading/           # Loading component
+│   ├── Login/             # Login component
 │   ├── Modal/             # Modal component
-│   └── Register/          # Register component
+│   ├── Register/          # Register component
+│   ├── Root/              # Root component
+│   ├── SuccessMessage/    # SuccessMessage component
+│   └── UserBlogs/         # UserBlogs component
 ├── styles/                # Shared styled components
 │   └── styles.jsx
 ├── App.jsx                # Main application component
