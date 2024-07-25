@@ -49,7 +49,7 @@ const router = createBrowserRouter([
                 element: <CreateCategories />
             },
             {
-                path: 'edit-category',
+                path: 'edit-category/:categoryId',
                 element: <EditCategories />
             },
             {
