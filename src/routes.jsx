@@ -7,6 +7,9 @@ import CreateBlog from "./components/CreateBlog/CreateBlog.jsx";
 import BlogDetail from "./components/BlogDetails/BlogDetail.jsx";
 import UserBlogs from "./components/UserBlogs/UserBlogs.jsx";
 import EditBlog from "./components/EditBlog/EditBlog.jsx";
+import Categories from "./components/Categories/Categories.jsx";
+import CreateCategories from "./components/CreateCategories/CreateCategories.jsx";
+import EditCategories from "./components/EditCategories/EditCategories.jsx";
 
 const router = createBrowserRouter([
     {
@@ -36,6 +39,18 @@ const router = createBrowserRouter([
             {
                 path: 'user/blogs',
                 element: <UserBlogs />
+            },
+            {
+                path: 'categories',
+                element: <Categories/>
+            },
+            {
+                path: 'create-category',
+                element: <CreateCategories />
+            },
+            {
+                path: 'edit-category',
+                element: <EditCategories />
             },
             {
                 path: 'register',
