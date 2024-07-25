@@ -81,7 +81,34 @@ export const fetchCategories = async() => {
     } catch (error) {
         handleError(error);
     }
-}
+};
+
+export const createCategories = async (categories) => {
+    try {
+        const response = await axiosInstance.post('/categories', categories);
+        return response.data;
+    } catch (error) {
+        handleError(error);
+    }
+};
+
+export const updateCategories = async (id, categories) => {
+    try {
+        const response = await axiosInstance.patch(`/categories/${id}`, categories);
+        return response.data;
+    } catch (error) {
+        handleError(error);
+    }
+};
+
+export const deleteCategories = async (id) => {
+    try {
+        const response = await axiosInstance.delete(`/categories/${id}`);
+        return response.data;
+    } catch (error) {
+        handleError(error);
+    }
+};
 
 export const fetchComments = async (blogId) => {
     try {
