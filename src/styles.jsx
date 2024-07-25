@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Link } from 'react-router-dom'
 
 export const StyledForm = styled.form`
     display: flex;
@@ -40,6 +41,7 @@ export const StyledForm = styled.form`
         padding: 0.5rem 1rem;
         border: none;
         border-radius: 10px;
+        cursor: pointer;
     }
     
     & button:hover {
@@ -103,6 +105,7 @@ export const StyledEditor = styled.form`
         border-radius: 10px;
         width: 200px;
         align-self: center;
+        cursor: pointer;
     }
 
     & button:hover {
@@ -133,4 +136,12 @@ export const StyledFormElement = styled.div`
     & input {
         padding: 0.5rem 0;
     }
+`
+
+export const StyledLink = styled(Link)`
+    text-decoration: none;
+    color: #fff;
+    background-color: #213547;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
 `
