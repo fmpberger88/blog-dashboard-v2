@@ -13,7 +13,7 @@ const AddComment = () => {
     const mutation = useMutation({
         mutationFn: (newComment) => createComment(blogId, newComment),
         onSuccess: () => {
-            queryClient.invalidateQueries("blogId", blogId)
+            queryClient.invalidateQueries(["blogId", blogId])
         }
     });
 

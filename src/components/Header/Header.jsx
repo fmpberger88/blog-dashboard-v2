@@ -41,6 +41,9 @@ const Header = () => {
                             ) : (
                                 <>
                                     <li>
+                                        <NavLink to="/categories">Blog Categories</NavLink>
+                                    </li>
+                                    <li>
                                         <NavLink to="/create-blog">Create Blog</NavLink>
                                     </li>
                                     <li>
@@ -79,6 +82,9 @@ const Header = () => {
                                         </>
                                     ) : (
                                         <>
+                                            <li>
+                                                <NavLink to="/categories" onClick={toggleModal}>Categories</NavLink>
+                                            </li>
                                             <li>
                                                 <NavLink to="/create-blog" onClick={toggleModal}>Create Blog</NavLink>
                                             </li>

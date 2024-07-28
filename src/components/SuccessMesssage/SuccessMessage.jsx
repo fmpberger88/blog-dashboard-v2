@@ -5,7 +5,7 @@ const SuccessMessage = ({ message }) => {
     return (
         <div className={styles.errorContainer}>
             <div className={styles.errorBox}>
-                <div className={styles.errorTitle}>Something went wrong</div>
+                <div className={styles.errorTitle}>Success</div>
                 <div className={styles.errorMessage}>{message}</div>
             </div>
         </div>

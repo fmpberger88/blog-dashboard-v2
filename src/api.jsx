@@ -112,7 +112,7 @@ export const deleteCategories = async (id) => {
 
 export const fetchComments = async (blogId) => {
     try {
-        const response = await axiosInstance.get(`/comments/${blogId}`);
+        const response = await axiosInstance.get(`/blogs/${blogId}/comments`);
         return response.data;
     } catch (error) {
         handleError(error);
@@ -121,16 +121,16 @@ export const fetchComments = async (blogId) => {
 
 export const createComment = async (blogId, comment) => {
     try {
-        const response = await axiosInstance.post(`/comments/${blogId}`, comment);
+        const response = await axiosInstance.post(`/blogs/${blogId}/comments`, comment);
         return response.data;
     } catch (error) {
         handleError(error);
     }
 };
 
-export const deleteComment = async (commentId) => {
+export const deleteComment = async (blogId, commentId) => {
     try {
-        const response = await axiosInstance.delete(`/comments/${commentId}`);
+        const response = await axiosInstance.delete(`/blogs/${blogId}/comments/${commentId}`);
         return response.data;
     } catch (error) {
         handleError(error);

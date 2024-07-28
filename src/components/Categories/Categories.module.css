@@ -1,0 +1,52 @@
+.pageContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 90%;
+    margin-left: 15%;
+    margin-right: 5%;
+    gap: 1rem;
+    height: 90vh;
+
+}
+
+.categoriesContainer {
+    display: flex;
+    border: 1px solid #475E72;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem;
+    border-radius: 1rem;
+    width: 60%;
+    margin-left: 5%;
+}
+
+.createButton {
+    align-self: center;
+}
+
+
+
+.buttonContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.3rem;
+}
+
+@media (max-width: 1000px) {
+    .pageContainer {
+        margin-left: 1rem;
+    }
+    .categoriesContainer {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-left: 5%;
+        width: 100%;
+        font-size: 1.3rem;
+    }
+}

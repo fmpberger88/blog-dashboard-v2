@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import styles from './BlogDetail.module.css';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { fetchBlogById, deleteBlog, deleteComment } from '../../api.jsx';
+import { fetchBlogById, deleteBlog, fetchComments, deleteComment } from '../../api.jsx';
 import DOMPurify from 'dompurify';
 import defaultImage from '/default_image.webp';
 import Loading from '../Loading/Loading.jsx';
@@ -10,6 +10,7 @@ import ErrorMessage from '../ErrorMessage/ErrorMessage.jsx';
 import Modal from '../Modal/Modal.jsx';
 import AddComment from '../AddComment/AddComment.jsx';
 import { Helmet } from 'react-helmet-async';
+import {StyledButton} from "../../styles.jsx";
 
 const BlogDetails = () => {
     const { blogId } = useParams();
@@ -19,10 +20,15 @@ const BlogDetails = () => {
     const currentUserId = localStorage.getItem('userId');
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const { data, error, isLoading } = useQuery({
+    const { data: blogs, error: blogsError, isLoading: blogsIsLoading } = useQuery({
         queryKey: ['blog', blogId],
         queryFn: () => fetchBlogById(blogId),
     });
+
+    const { data: comments, error: commentsError, isLoading: commentsIsLoading } = useQuery({
+        queryKey: ['comment', blogId],
+        queryFn: () => fetchComments(blogId),
+    })
 
     // Delete a Blog
     const mutation = useMutation({
@@ -37,16 +43,20 @@ const BlogDetails = () => {
     const deleteMutation = useMutation({
         mutationFn: (commentId) => deleteComment(commentId, token),
         onSuccess: () => {
-            queryClient.invalidateQueries(['blog', blogId]);
+            queryClient.invalidateQueries(['comment', blogId]);
         }
     });
 
-    if (isLoading) {
+    if (blogsIsLoading || commentsIsLoading) {
         return <Loading />;
     }
 
-    if (error) {
-        return <ErrorMessage message={error.message} />;
+    if (blogsError) {
+        return <ErrorMessage message={blogsError.message} />;
+    }
+
+    if (commentsError) {
+        return <ErrorMessage message={commentsError.message} />
     }
 
     // Delete a Blog!
@@ -73,22 +83,22 @@ const BlogDetails = () => {
     };
 
     // Clean html-content
-    const cleanContent = DOMPurify.sanitize(data.content);
+    const cleanContent = DOMPurify.sanitize(blogs.content);
 
     return (
         <div className={styles.blogContainer}>
             <Helmet>
-                <title>{data.seoTitle}</title>
-                <meta name="description" content={data.seoDescription} />
-                <meta name="keywords" content={data.seoKeywords.join(', ')} />
+                <title>{blogs.seoTitle}</title>
+                <meta name="description" content={blogs.seoDescription} />
+                <meta name="keywords" content={blogs.seoKeywords.join(', ')} />
             </Helmet>
-            <h1 className={styles.blogTitle}>{data.title}</h1>
-            <span className={styles.author}>{data.author.first_name} {data.author.family_name}</span>
-            <span className={styles.published}>Published on: {new Date(data.createdAt).toLocaleDateString()}</span>
-            {data.image ?
+            <h1 className={styles.blogTitle}>{blogs.title}</h1>
+            <span className={styles.author}>{blogs.author.first_name} {blogs.author.family_name}</span>
+            <span className={styles.published}>Published on: {new Date(blogs.createdAt).toLocaleDateString()}</span>
+            {blogs.image ?
                 <img
-                    src={data.image}
-                    alt={data.title}
+                    src={blogs.image}
+                    alt={blogs.title}
                     className={styles.blogImage}
                 /> :
                 <img
@@ -100,21 +110,21 @@ const BlogDetails = () => {
                 className={styles.content}
                 dangerouslySetInnerHTML={{ __html: cleanContent }}
             ></div>
-            <span className={styles.views}>Views: {data.views}</span>
+            <span className={styles.views}>Views: {blogs.views}</span>
 
             {/* Display SEO Elements */}
             <div className={styles.seoSection}>
                 <h3>SEO Information</h3>
-                <p><strong>SEO Title:</strong> {data.seoTitle}</p>
-                <p><strong>SEO Description:</strong> {data.seoDescription}</p>
-                <p><strong>SEO Keywords:</strong> {data.seoKeywords.join(', ')}</p>
+                <p><strong>SEO Title:</strong> {blogs.seoTitle}</p>
+                <p><strong>SEO Description:</strong> {blogs.seoDescription}</p>
+                <p><strong>SEO Keywords:</strong> {blogs.seoKeywords.join(', ')}</p>
             </div>
 
             {/* Display Categories */}
             <div className={styles.categorySection}>
                 <h3>Categories</h3>
-                {data.categories.length > 0 ? (
-                    data.categories.map(category => (
+                {blogs.categories.length > 0 ? (
+                    blogs.categories.map(category => (
                         <span key={category._id} className={styles.category}>{category.name}</span>
                     ))
                 ) : (
@@ -125,8 +135,8 @@ const BlogDetails = () => {
             {/* Display Tags */}
             <div className={styles.tagSection}>
                 <h3>Tags</h3>
-                {data.tags.length > 0 ? (
-                    data.tags.map((tag, index) => (
+                {blogs.tags.length > 0 ? (
+                    blogs.tags.map((tag, index) => (
                         <span key={index} className={styles.tag}>{tag}</span>
                     ))
                 ) : (
@@ -135,26 +145,30 @@ const BlogDetails = () => {
             </div>
 
             <div className={styles.buttonContainer}>
-                {data.author._id === currentUserId && (
+                {blogs.author._id === currentUserId && (
                     <>
-                        <Link to={`/update-blog/${blogId}`} className={styles.editButton}>Edit</Link>
-                        <button className={styles.deleteButton} onClick={openModal}>Delete Blog</button>
+                        <Link to={`/update-blog/${blogId}`}>
+                            <StyledButton>Edit</StyledButton>
+                        </Link>
+                        <StyledButton onClick={openModal}>Delete Blog</StyledButton>
                     </>
                 )}
             </div>
 
             <h2 className={styles.commentsTitle}>Comments</h2>
             <AddComment />
-            {data.comments.length > 0 ? data.comments.map(comment => (
+            {comments.length > 0 ? comments.map(comment => (
                 <div key={comment._id} className={styles.commentsCard}>
                     <p className={styles.commentsText}>{comment.text}</p>
                     <small>{new Date(comment.createdAt).toLocaleDateString()}</small>
-                    {data.author._id === currentUserId && (
-                        <button className={styles.deleteCommentButton} onClick={() => handleDeleteComment(comment._id)}>Delete</button>
+                    {blogs.author._id === currentUserId && (
+                        <StyledButton className={styles.deleteCommentButton} onClick={() => handleDeleteComment(comment._id)}>Delete</StyledButton>
                     )}
                 </div>
             )) : (<span className={styles.commentsText}>No comments!</span>)}
-            <Link className={styles.backLink} to="/blogs">Back</Link>
+            <Link to="/blogs">
+                <StyledButton>Back</StyledButton>
+            </Link>
             <Modal
                 open={isModalOpen}
                 title="Confirm Delete"

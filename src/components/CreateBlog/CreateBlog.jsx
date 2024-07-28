@@ -4,7 +4,16 @@ import { Editor } from '@tinymce/tinymce-react';
 import { createBlog, fetchCategories } from '../../api.jsx';
 import { useNavigate } from 'react-router-dom';
 import styles from './CreateBlog.module.css';
-import {StyledEditor} from "../../styles.jsx";
+import {
+    StyledEditor,
+    StyledLink,
+    StyledButton,
+    StyledFormElement,
+    CreateContainer,
+    InputError,
+    CharactersLeft
+} from "../../styles.jsx";
+import ErrorMessage from "../ErrorMessage/ErrorMessage.jsx";
 
 
 const CreateBlog = () => {
@@ -16,11 +25,12 @@ const CreateBlog = () => {
     const [seoDescription, setSeoDescription] = useState('');
     const [seoKeywords, setSeoKeywords] = useState('');
     const [image, setImage] = useState(null);
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
     // fetch categories
-    const { data: categories, error, isLoading: categoriesLoading } = useQuery({
+    const { data: categories, error: categoriesError, isLoading: categoriesLoading } = useQuery({
         queryKey: 'categories',
         queryFn: fetchCategories
     })
@@ -33,7 +43,7 @@ const CreateBlog = () => {
             navigate('/user/blogs');
         },
         onError: (error) => {
-            alert(error.message);
+            setError(error.message);
         }
     });
 
@@ -64,20 +74,34 @@ const CreateBlog = () => {
         );
     }
 
+    if (categoriesError) {
+        return <ErrorMessage message={error.message} />;
+    }
+
     return (
-        <div className={styles.createBlogContainer}>
-            <StyledEditor onSubmit={handleSubmit} className={styles.form}>
-                <div className={styles.formGroup}>
+        <CreateContainer>
+            <StyledEditor onSubmit={handleSubmit}>
+                {error && <ErrorMessage error={error} /> }
+                <h1>Create Blog</h1>
+                <StyledFormElement>
+                    <label htmlFor="title">Blog Title</label>
                     <input
                         type="text"
                         id="title"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        placeholder="Blog Title"
+                        placeholder="Enter blog title"
+                        maxLength={100}
                         required
                     />
-                </div>
-                <div className={styles.formGroup}>
+                    {/* Display the amount of characters left */}
+                    <CharactersLeft>{100 - title.length} characters left.</CharactersLeft>
+                    {title.length >= 100 && (
+                        <InputError>You reached the maximum of 100 characters</InputError>
+                    )}
+                </StyledFormElement>
+                <StyledFormElement>
+                    <label htmlFor="content">Content</label>
                     <Editor
                         apiKey={import.meta.env.VITE_TINY_MCE_KEY}
                         value={content}
@@ -96,44 +120,59 @@ const CreateBlog = () => {
                         }}
                         onEditorChange={handleEditorChange}
                     />
-                </div>
+                </StyledFormElement>
                 <p>Please add information about the blog for Search Engine Optimization (SEO)</p>
-                <div>
+                <StyledFormElement>
+                    <label htmlFor="seoTitle">SEO Title</label>
                     <input
                         type="text"
                         id="seoTitle"
                         value={seoTitle}
                         onChange={(e) => setSeoTitle(e.target.value)}
-                        placeholder="Seo Title"
+                        placeholder="Enter SEO title"
+                        maxLength={60}
                         required
                     />
-                </div>
-                <div>
+                    {/* Display the amount of characters left */}
+                    <CharactersLeft>{60 - seoTitle.length} characters left.</CharactersLeft>
+                    {seoTitle.length >=60 && (
+                        <InputError>You reached the maximum of 60 characters</InputError>
+                    )}
+                </StyledFormElement>
+                <StyledFormElement>
+                    <label htmlFor="seoDescription">SEO Description</label>
                     <textarea
                         id="seoDescription"
                         value={seoDescription}
                         onChange={(e) => setSeoDescription(e.target.value)}
-                        placeholder="SEO Description"
+                        maxLength={160}
+                        placeholder="Enter SEO description"
                         required
                     />
-                </div>
-                <div>
+                    {/* Display the amount of characters left */}
+                    <CharactersLeft>{160 - seoDescription.length} characters left.</CharactersLeft>
+                    {seoDescription.length >= 160 && (
+                        <InputError>You reached the maximum of 160 characters</InputError>
+                    )}
+                </StyledFormElement>
+                <StyledFormElement>
+                    <label htmlFor="seoKeywords">SEO Keywords</label>
                     <input
                         type="text"
                         id="seoKeywords"
                         value={seoKeywords}
                         onChange={(e) => setSeoKeywords(e.target.value)}
-                        placeholder="SEO Keywords (comma seperated)"
+                        placeholder="Enter SEO keywords (comma separated)"
                         required
                     />
-                </div>
-                <div>
-                    <label>Categories:</label>
+                </StyledFormElement>
+                <StyledFormElement>
+                    <label>Categories</label>
                     {categoriesLoading ? (
                         <p>Loading categories...</p>
                     ) : (
                         categories.map(category => (
-                            <div key={category._id}>
+                            <div key={category._id} className={styles.checkboxContainer}>
                                 <input
                                     type="checkbox"
                                     id={category._id}
@@ -144,28 +183,32 @@ const CreateBlog = () => {
                             </div>
                         ))
                     )}
-                </div>
-                <div>
+                </StyledFormElement>
+                <StyledFormElement>
+                    <label htmlFor="tags">Tags</label>
                     <input
                         type="text"
                         id="tags"
                         value={tags}
                         onChange={(e) => setTags(e.target.value)}
-                        placeholder="Tags (comma seperated)"
+                        placeholder="Enter tags (comma separated)"
                         required
                     />
-                </div>
-                <div>
+                </StyledFormElement>
+                <StyledFormElement>
                     <label htmlFor="image">Image</label>
                     <input
                         type="file"
                         id="image"
                         onChange={(e) => setImage(e.target.files[0])}
                     />
-                </div>
-                <button type="submit" className={styles.submitButton}>Create Blog</button>
+                </StyledFormElement>
+                <StyledButton type="submit">Create Blog</StyledButton>
+                <StyledLink to="/user/blogs">
+                    <StyledButton type="button">Cancel</StyledButton>
+                </StyledLink>
             </StyledEditor>
-        </div>
+        </CreateContainer>
     );
 };
 
