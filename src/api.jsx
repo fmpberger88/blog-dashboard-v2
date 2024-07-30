@@ -18,8 +18,8 @@ axiosInstance.interceptors.request.use((config) => {
 
 const handleError = (error) => {
     if (error.response) {
-        console.error(`Error: ${error.response.status} - ${error.response.data.message}`);
-        throw new Error(error.response.data.message || 'An error occurred');
+        console.error(`Error: ${error.response.status} - ${error.message}`);
+        throw new Error(`Response status: ${error.response.status}\n ${error.message}` || 'An error occurred');
     } else if (error.request) {
         console.error('Error: No response received from server');
         throw new Error('No response received from server');
@@ -91,6 +91,15 @@ export const createCategories = async (categories) => {
         handleError(error);
     }
 };
+
+export const fetchCategoryById = async (id) => {
+    try {
+        const response = await axiosInstance.get(`/categories/${id}`);
+        return response.data;
+    } catch (error) {
+        handleError(error);
+    }
+}
 
 export const updateCategories = async (id, categories) => {
     try {
