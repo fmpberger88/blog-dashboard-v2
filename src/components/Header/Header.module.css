@@ -39,7 +39,7 @@ nav {
     right: 20px;
     width: 50px;
     height: 50px;
-    background-color: #213547;;
+    background-color: #721c24;;
     color: white;
     border: none;
     border-radius: 50%;
@@ -74,11 +74,10 @@ nav {
     padding: 20px;
     border-radius: 8px;
     width: 80%;
-    max-width: 200px;
     text-align: start;
     position: relative;
     height: 50vh;
-    right: 9vh;
+    right: 3vh;
     bottom: 20vh;
 }
 

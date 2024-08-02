@@ -11,6 +11,7 @@ import {
     StyledFormElement,
     StyledLink
 } from "../../styles.jsx";
+import SuccessMessage from "../SuccessMesssage/SuccessMessage.jsx";
 
 const CreateCategories = () => {
     const [name, setName] = useState('');
@@ -18,13 +19,16 @@ const CreateCategories = () => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
 
     const mutation = useMutation({
         mutationFn: createCategories,
         onSuccess: () => {
-            alert(`Successfully created category ${name}`);
+            setSuccess(`Successfully created category ${name}`)
             queryClient.invalidateQueries('categories');
-            navigate('/categories');
+            setTimeout(() => {
+                navigate('/categories');
+            }, 3000)
         },
         onError: (error) => {
             setError(error.message);
@@ -43,6 +47,7 @@ const CreateCategories = () => {
     return (
         <CreateContainer>
             <StyledEditor onSubmit={handleSubmit} >
+                {success && <SuccessMessage message={success} />}
                 {error && <ErrorMessage message={error} />}
                 <h1>Create Category</h1>
                 <StyledFormElement>

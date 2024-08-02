@@ -24,7 +24,9 @@
 }
 
 .createButton {
-    align-self: center;
+    align-self: flex-start !important;
+    margin-left: 6%;
+    margin-bottom: 10px;
 }
 
 

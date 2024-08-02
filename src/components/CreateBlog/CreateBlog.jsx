@@ -14,6 +14,7 @@ import {
     CharactersLeft
 } from "../../styles.jsx";
 import ErrorMessage from "../ErrorMessage/ErrorMessage.jsx";
+import SuccessMessage from "../SuccessMesssage/SuccessMessage.jsx";
 
 
 const CreateBlog = () => {
@@ -26,21 +27,24 @@ const CreateBlog = () => {
     const [seoKeywords, setSeoKeywords] = useState('');
     const [image, setImage] = useState(null);
     const [error, setError] = useState(null);
+    const [success, setSucess] = useState(null);
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
     // fetch categories
     const { data: categories, error: categoriesError, isLoading: categoriesLoading } = useQuery({
-        queryKey: 'categories',
+        queryKey: ['categories'],
         queryFn: fetchCategories
     })
 
     const mutation = useMutation({
         mutationFn: createBlog,
         onSuccess: () => {
-            alert("Blog created successfully!");
+            setSucess("Blog created successfully!");
             queryClient.invalidateQueries('blogs');
-            navigate('/user/blogs');
+            setTimeout(() => {
+                navigate('/user/blogs');
+            }, 3000)
         },
         onError: (error) => {
             setError(error.message);
@@ -81,7 +85,8 @@ const CreateBlog = () => {
     return (
         <CreateContainer>
             <StyledEditor onSubmit={handleSubmit}>
-                {error && <ErrorMessage error={error} /> }
+                {success && <SuccessMessage message={success}/>}
+                {error && <ErrorMessage message={error} /> }
                 <h1>Create Blog</h1>
                 <StyledFormElement>
                     <label htmlFor="title">Blog Title</label>

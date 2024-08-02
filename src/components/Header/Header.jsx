@@ -9,8 +9,7 @@ const Header = () => {
 
     // Delete JWT Token
     const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
+        localStorage.clear();
         navigate('/login');
     };
 
@@ -27,6 +26,9 @@ const Header = () => {
                             <li>
                                 <NavLink to="/blogs">Blogs</NavLink>
                             </li>
+                            <li>
+                                <NavLink to="/categories">Categories</NavLink>
+                            </li>
                         </div>
                         <div className={styles.navGroup}>
                             {!token ? (
@@ -40,9 +42,6 @@ const Header = () => {
                                 </>
                             ) : (
                                 <>
-                                    <li>
-                                        <NavLink to="/categories">Blog Categories</NavLink>
-                                    </li>
                                     <li>
                                         <NavLink to="/create-blog">Create Blog</NavLink>
                                     </li>
@@ -69,12 +68,15 @@ const Header = () => {
                                     <li>
                                         <NavLink to="/blogs" onClick={toggleModal}>Blogs</NavLink>
                                     </li>
+                                    <li>
+                                        <NavLink to="/categories" onClick={toggleModal}>Categories</NavLink>
+                                    </li>
                                 </div>
                                 <div className={styles.navGroup}>
                                     {!token ? (
                                         <>
                                             <li>
-                                                <NavLink to="/login" onClick={toggleModal}>Login</NavLink>
+                                            <NavLink to="/login" onClick={toggleModal}>Login</NavLink>
                                             </li>
                                             <li>
                                                 <NavLink to="/register" onClick={toggleModal}>Register</NavLink>
@@ -82,9 +84,6 @@ const Header = () => {
                                         </>
                                     ) : (
                                         <>
-                                            <li>
-                                                <NavLink to="/categories" onClick={toggleModal}>Categories</NavLink>
-                                            </li>
                                             <li>
                                                 <NavLink to="/create-blog" onClick={toggleModal}>Create Blog</NavLink>
                                             </li>

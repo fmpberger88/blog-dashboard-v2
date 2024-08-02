@@ -110,6 +110,7 @@ export const StyledEditor = styled.form`
         border: none;
         border-radius: 5px;
         font-size: 1rem;
+        text-indent: 0.25rem;
     }
     
     & button {
@@ -171,6 +172,7 @@ export const StyledButton = styled.button`
     font-weight: bold;
     border: 1px solid transparent;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9);
+    width: 150px;
 
     &:hover {
         background-color: #721c24;

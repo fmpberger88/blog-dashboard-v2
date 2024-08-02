@@ -10,7 +10,7 @@ import ErrorMessage from '../ErrorMessage/ErrorMessage.jsx';
 import Modal from '../Modal/Modal.jsx';
 import AddComment from '../AddComment/AddComment.jsx';
 import { Helmet } from 'react-helmet-async';
-import {StyledButton} from "../../styles.jsx";
+import {InputError, StyledButton} from "../../styles.jsx";
 
 const BlogDetails = () => {
     const { blogId } = useParams();
@@ -19,6 +19,7 @@ const BlogDetails = () => {
     const token = localStorage.getItem('token');
     const currentUserId = localStorage.getItem('userId');
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [error, setError] = useState(null);
 
     const { data: blogs, error: blogsError, isLoading: blogsIsLoading } = useQuery({
         queryKey: ['blog', blogId],
@@ -36,14 +37,20 @@ const BlogDetails = () => {
         onSuccess: () => {
             queryClient.invalidateQueries('blogs');
             navigate('/blogs');
+        },
+        onError: (error) => {
+            setError(error);
         }
     });
 
     // Delete a Comment
     const deleteMutation = useMutation({
-        mutationFn: (commentId) => deleteComment(commentId, token),
+        mutationFn: (commentId) => deleteComment(blogId, commentId),
         onSuccess: () => {
             queryClient.invalidateQueries(['comment', blogId]);
+        },
+        onError: (error) => {
+            setError(error.message);
         }
     });
 
@@ -161,6 +168,8 @@ const BlogDetails = () => {
                 <div key={comment._id} className={styles.commentsCard}>
                     <p className={styles.commentsText}>{comment.text}</p>
                     <small>{new Date(comment.createdAt).toLocaleDateString()}</small>
+                    <small>{comment.author ? comment.author.username : "Anonym"}</small>
+                    {error && <InputError>{error}</InputError>}
                     {blogs.author._id === currentUserId && (
                         <StyledButton className={styles.deleteCommentButton} onClick={() => handleDeleteComment(comment._id)}>Delete</StyledButton>
                     )}

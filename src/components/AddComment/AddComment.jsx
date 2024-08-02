@@ -3,6 +3,7 @@ import { useState } from "react";
 import {createComment} from "../../api.jsx";
 import {useParams} from "react-router-dom";
 import styles from "./AddComment.module.css";
+import {StyledButton} from "../../styles.jsx";
 
 
 const AddComment = () => {
@@ -34,7 +35,7 @@ const AddComment = () => {
                     required
                     minLength={5}
                 />
-                <button type="submit" className={styles.addCommentButton}>Submit</button>
+                <StyledButton type="submit">Submit</StyledButton>
             </form>
         </div>
     )
