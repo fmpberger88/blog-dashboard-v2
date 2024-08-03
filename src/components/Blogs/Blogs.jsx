@@ -6,6 +6,7 @@ import ErrorMessage from "../ErrorMessage/ErrorMessage.jsx";
 import styles from "./Blogs.module.css";
 import defaultImage from '/default_image.webp'
 import {MainTitle} from "../../styles.jsx";
+import { FaHeart } from 'react-icons/fa';
 
 const Blogs = () => {
     const navigate = useNavigate();
@@ -36,8 +37,17 @@ const Blogs = () => {
                         {blog.image ? <img src={blog.image} alt={blog.alt} className={styles.blogsImage}/> :
                             <img src={defaultImage} alt="default Image" className={styles.blogsImage}/>}
                         <h2 className={styles.blogsTitle}><Link to={`/blog/${blog._id}`}>{blog.title}</Link></h2>
-                        <span><strong>{blog.author.first_name} {blog.author.family_name}</strong></span>
-                        <span><em>{new Date(blog.createdAt).toLocaleDateString()}</em></span>
+                        <div className={styles.infoContainer}>
+                            <div className={styles.authorContainer}>
+                                <span><strong>{blog.author.first_name} {blog.author.family_name}</strong></span>
+                                <span><em>{new Date(blog.createdAt).toLocaleDateString()}</em></span>
+                            </div>
+                            <div className={styles.likesContainer}>
+                                <FaHeart className={styles.heartIcon}/>
+                                <span className={styles.likesCount}>{blog.likes.length}</span>
+                            </div>
+                        </div>
+
                     </div>
                 ))}
             </div>
