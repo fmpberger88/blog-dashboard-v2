@@ -10,7 +10,9 @@ import ErrorMessage from '../ErrorMessage/ErrorMessage.jsx';
 import Modal from '../Modal/Modal.jsx';
 import AddComment from '../AddComment/AddComment.jsx';
 import { Helmet } from 'react-helmet-async';
-import {InputError, StyledButton} from "../../styles.jsx";
+import { InputError, StyledButton } from "../../styles.jsx";
+import BlogLikeButton from "../BlogLikeButton/BlogLikeButton.jsx";
+import AddReply from "../AddReply/AddReply.jsx";
 
 const BlogDetails = () => {
     const { blogId } = useParams();
@@ -29,7 +31,7 @@ const BlogDetails = () => {
     const { data: comments, error: commentsError, isLoading: commentsIsLoading } = useQuery({
         queryKey: ['comment', blogId],
         queryFn: () => fetchComments(blogId),
-    })
+    });
 
     // Delete a Blog
     const mutation = useMutation({
@@ -63,7 +65,7 @@ const BlogDetails = () => {
     }
 
     if (commentsError) {
-        return <ErrorMessage message={commentsError.message} />
+        return <ErrorMessage message={commentsError.message} />;
     }
 
     // Delete a Blog!
@@ -92,6 +94,11 @@ const BlogDetails = () => {
     // Clean html-content
     const cleanContent = DOMPurify.sanitize(blogs.content);
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString();
+    };
+
     return (
         <div className={styles.blogContainer}>
             <Helmet>
@@ -101,7 +108,7 @@ const BlogDetails = () => {
             </Helmet>
             <h1 className={styles.blogTitle}>{blogs.title}</h1>
             <span className={styles.author}>{blogs.author.first_name} {blogs.author.family_name}</span>
-            <span className={styles.published}>Published on: {new Date(blogs.createdAt).toLocaleDateString()}</span>
+            <span className={styles.published}>Published on: {formatDate(blogs.createdAt)}</span>
             {blogs.image ?
                 <img
                     src={blogs.image}
@@ -151,6 +158,8 @@ const BlogDetails = () => {
                 )}
             </div>
 
+            <BlogLikeButton blogId={blogId} initialLikes={blogs.likes} userId={currentUserId} />
+
             <div className={styles.buttonContainer}>
                 {blogs.author._id === currentUserId && (
                     <>
@@ -166,13 +175,34 @@ const BlogDetails = () => {
             <AddComment />
             {comments.length > 0 ? comments.map(comment => (
                 <div key={comment._id} className={styles.commentsCard}>
+                    <div style={{ display: 'flex', justifySelf: 'center', alignSelf: 'flex-end' }}>
+                        {blogs.author._id === currentUserId && (
+                            <StyledButton className={styles.deleteCommentButton} onClick={() => handleDeleteComment(comment._id)}>Delete</StyledButton>
+                        )}
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px' }}>
+                        <small>{formatDate(comment.createdAt)}</small>
+                        <small>{comment.author ? comment.author.username : "Anonym"}</small>
+                    </div>
                     <p className={styles.commentsText}>{comment.text}</p>
-                    <small>{new Date(comment.createdAt).toLocaleDateString()}</small>
-                    <small>{comment.author ? comment.author.username : "Anonym"}</small>
-                    {error && <InputError>{error}</InputError>}
-                    {blogs.author._id === currentUserId && (
-                        <StyledButton className={styles.deleteCommentButton} onClick={() => handleDeleteComment(comment._id)}>Delete</StyledButton>
+                    {comment.replies && comment.replies.length > 0 && (
+                        <div className={styles.repliesContainer}>
+                            {comment.replies.map(reply => (
+                                <div key={reply._id} className={styles.replyCard}>
+                                    {blogs.author._id === currentUserId && (
+                                        <StyledButton className={styles.deleteCommentButton} onClick={() => handleDeleteComment(reply._id)}>Delete</StyledButton>
+                                    )}
+                                    <p>{reply.text}</p>
+                                    <div style={{ display: 'flex', gap: '10px' }}>
+                                        <small>{formatDate(reply.createdAt)}</small>
+                                        <small>{reply.author ? reply.author.username : "Anonym"}</small>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     )}
+                    <AddReply commentId={comment._id}/>
+                    {error && <InputError>{error}</InputError>}
                 </div>
             )) : (<span className={styles.commentsText}>No comments!</span>)}
             <Link to="/blogs">

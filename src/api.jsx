@@ -77,6 +77,24 @@ export const deleteBlog = async (id) => {
     }
 };
 
+export const likeBlog = async (blogId) => {
+    try {
+        const response = await axiosInstance.post(`/blogs/${blogId}/like`);
+        return response.data;
+    } catch (error) {
+        handleError(error);
+    }
+}
+
+export const unlikeBlog = async (blogId) => {
+    try {
+        const response = await axiosInstance.post(`/blogs/${blogId}/unlike`);
+        return response.data;
+    } catch (error) {
+        handleError(error);
+    }
+}
+
 export const fetchCategories = async() => {
     try {
         const response = await axiosInstance.get('/categories');
@@ -139,6 +157,15 @@ export const createComment = async (blogId, comment) => {
         handleError(error);
     }
 };
+
+export const createReply = async (commentId, reply) => {
+    try {
+        const response = await axiosInstance.post(`/comments/${commentId}/replies`, reply);
+        return response.data;
+    } catch (error) {
+        handleError(error)
+    }
+}
 
 export const deleteComment = async (blogId, commentId) => {
     try {

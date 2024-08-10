@@ -1,0 +1,9 @@
+.likeButton {
+    font-size: 2rem; /* Größe der Herz-Icons */
+    cursor: pointer;
+    color: #ff0000; /* Farbe für das Herz */
+}
+
+.likeButton .loading {
+    cursor: wait;
+}
