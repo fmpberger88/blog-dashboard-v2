@@ -4,10 +4,12 @@ import {createComment} from "../../api.jsx";
 import {useParams} from "react-router-dom";
 import styles from "./AddComment.module.css";
 import {StyledButton} from "../../styles.jsx";
+import ErrorMessage from "../ErrorMessage/ErrorMessage.jsx";
 
 
 const AddComment = () => {
     const [text, setText] = useState("");
+    const [error, setErrorMessage] = useState(null);
     const { blogId } = useParams();
     const queryClient = useQueryClient();
 
@@ -15,6 +17,9 @@ const AddComment = () => {
         mutationFn: (newComment) => createComment(blogId, newComment),
         onSuccess: () => {
             queryClient.invalidateQueries(["blogId", blogId])
+        },
+        onError: (error) => {
+            setErrorMessage(error.message);
         }
     });
 
@@ -26,6 +31,7 @@ const AddComment = () => {
 
     return (
         <div className={styles.addCommentContainer}>
+            {error && <ErrorMessage message={error} />}
             <form onSubmit={handleSubmit} className={styles.addCommentForm}>
                 <textarea
                     className={styles.addCommentTextarea}
