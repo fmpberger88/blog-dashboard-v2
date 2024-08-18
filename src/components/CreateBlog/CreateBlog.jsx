@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Editor } from '@tinymce/tinymce-react';
 import { createBlog, fetchCategories } from '../../api.jsx';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +16,6 @@ import {
 import ErrorMessage from "../ErrorMessage/ErrorMessage.jsx";
 import SuccessMessage from "../SuccessMesssage/SuccessMessage.jsx";
 
-
 const CreateBlog = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -30,13 +29,11 @@ const CreateBlog = () => {
     const [success, setSucess] = useState(null);
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-
     // fetch categories
     const { data: categories, error: categoriesError, isLoading: categoriesLoading } = useQuery({
         queryKey: ['categories'],
         queryFn: fetchCategories
-    })
-
+    });
     const mutation = useMutation({
         mutationFn: createBlog,
         onSuccess: () => {
@@ -44,17 +41,15 @@ const CreateBlog = () => {
             queryClient.invalidateQueries('blogs');
             setTimeout(() => {
                 navigate('/user/blogs');
-            }, 3000)
+            }, 3000);
         },
         onError: (error) => {
             setError(error.message);
         }
     });
-
     const handleEditorChange = (content, editor) => {
         setContent(content);
     };
-
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData();
@@ -70,18 +65,15 @@ const CreateBlog = () => {
         }
         mutation.mutate(formData);
     };
-
     const handleCategoryChange = (e) => {
         const { value, checked } = e.target;
         setSelectedCategories(prev =>
             checked ? [...prev, value] : prev.filter(category => category !== value)
         );
     }
-
     if (categoriesError) {
         return <ErrorMessage message={error.message} />;
     }
-
     return (
         <CreateContainer>
             <StyledEditor onSubmit={handleSubmit}>
@@ -112,16 +104,17 @@ const CreateBlog = () => {
                         value={content}
                         init={{
                             height: 500,
-                            menubar: false,
+                            menubar: true,
                             plugins: [
                                 'advlist autolink lists link image charmap print preview anchor',
                                 'searchreplace visualblocks code fullscreen',
                                 'insertdatetime media table paste code help wordcount'
                             ],
                             toolbar:
-                                'undo redo | formatselect | bold italic backcolor | \
+                                'undo redo | formatselect fontselect fontsizeselect | bold italic backcolor | \
                                 alignleft aligncenter alignright alignjustify | \
-                                bullist numlist outdent indent | removeformat | help'
+                                bullist numlist outdent indent | removeformat | help',
+                            content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
                         }}
                         onEditorChange={handleEditorChange}
                     />
@@ -216,5 +209,4 @@ const CreateBlog = () => {
         </CreateContainer>
     );
 };
-
 export default CreateBlog;
