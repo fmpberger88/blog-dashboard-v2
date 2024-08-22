@@ -37,13 +37,15 @@ const Login = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email" required />
+                placeholder="Email"
+                required />
             <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-                required />
+                required
+            />
             <button type="submit" disabled={mutation.isLoading}>
                 {mutation.isLoading ? "Logging in..." : "Login"}
             </button>
